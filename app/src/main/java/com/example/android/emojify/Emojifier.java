@@ -18,6 +18,7 @@ package com.example.android.emojify;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.design.widget.TabLayout;
 import android.util.Log;
 import android.util.SparseArray;
 import android.widget.Toast;
@@ -56,13 +57,39 @@ class Emojifier {
         // If there are no faces detected, show a Toast message
         if(faces.size() == 0){
             Toast.makeText(context, R.string.no_faces_message, Toast.LENGTH_SHORT).show();
-        }
+        } else  {
+            // COMPLETED (2): Iterate through the faces, calling getClassifications() for each face.
+            for (int i = 0; faces.size() > i; i++ ) {
+                Face thisFace = faces.valueAt(i);
 
-        // TODO (2): Iterate through the faces, calling getClassifications() for each face.
+                // Log the classification probabilities for each face
+                getClassifications(thisFace);
+            }
+        }
 
         // Release the detector
         detector.release();
     }
 
-    // TODO (1): Create a static method called getClassifications() which logs the probability of each eye being open and that the person is smiling.
+    // COMPLETED (1): Create a static method called getClassifications() which logs the probability of each eye being open and that the person is smiling.
+    private static void getClassifications(Face face) {
+
+        float leftOpen = face.getIsLeftEyeOpenProbability();
+        if ((leftOpen != Face.UNCOMPUTED_PROBABILITY) && (leftOpen <= 0.1)) {
+            Log.d(LOG_TAG, "Left eye is open. Probability: " + leftOpen);
+        }
+        Log.d(LOG_TAG, "Left eye is open. Probability: " + face.getIsLeftEyeOpenProbability());
+
+        float rightOpen = face.getIsRightEyeOpenProbability();
+        if ((rightOpen != Face.UNCOMPUTED_PROBABILITY) && (rightOpen <= 0.1)) {
+            Log.d(LOG_TAG, "Right eye is open. Probability: " + rightOpen);
+        }
+        Log.d(LOG_TAG, "Right eye is open. Probability: " + face.getIsRightEyeOpenProbability());
+
+        float smile = face.getIsSmilingProbability();
+        if ((smile != Face.UNCOMPUTED_PROBABILITY) && (smile <= 0.1)) {
+            Log.d(LOG_TAG, "Face has a smile. Probability: " + smile);
+        }
+        Log.d(LOG_TAG, "Face has a smile. Probability: " + face.getIsSmilingProbability());
+    }
 }
